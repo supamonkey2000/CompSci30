@@ -16,7 +16,14 @@ public class Deck {
 			}
 		}
 		
-		//Shuffle code (activity 4)
+		Deck tmpDeck = new Shuffler().selectionShuffle(this);
+		cards.addAll(dealt);
+		int m = dealt.size() - 1;
+		for(int i = m; i >= 0;i--) {
+			//System.out.println(m + " and " + i);
+			dealt.remove(i);
+		}
+		System.out.println("Cards: " + cards.size() + "\nDealt: " + dealt.size());
 	}
 	
 	public Deck(ArrayList<Card>newcards) {

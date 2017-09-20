@@ -1,0 +1,15 @@
+* * * Questions * * *
+
+Activity 2:
+	1. A deck is a class that holds Card objects in its ArrayLists.
+	2. 6
+	3.	String[] ranks = {"Ace","2","3","4","5","6","7","8","9","10","Jack","Queen","King"};
+		int[] pointValues = {11,2,3,4,5,6,7,8,9,10,10,10,10};
+		String[] suits = {"Spades","Hearts","Diamonds","Clubs"};
+	4. Yes (at least for my methods it does)
+	
+Activity 3:
+	1. 	public String flip() {
+			
+			
+		}
