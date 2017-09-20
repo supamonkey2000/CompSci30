@@ -19,6 +19,10 @@ public class Deck {
 		//Shuffle code (activity 4)
 	}
 	
+	public Deck(ArrayList<Card>newcards) {
+		cards.addAll(newcards);
+	}
+	
 	public int size() {
 		return cards.size();
 	}
@@ -38,6 +42,20 @@ public class Deck {
 			dealt.add(dealtCard);
 			cards.remove(cards.size()-1);
 			return dealtCard;
+		}
+		else {
+			return null;
+		}
+	}
+	
+	public Card select(int index) {
+		if(size() != 0) {
+			try {
+				Card dealtCard = cards.get(index);
+				dealt.add(dealtCard);
+				cards.remove(index);
+				return dealtCard;
+			}catch(IndexOutOfBoundsException ex) {return null;}
 		}
 		else {
 			return null;
