@@ -91,7 +91,7 @@ public class HangingMan {
 	}
 	
 	
-	public void displayHangingMan() throws Exception {
+	public void displayHangingMan() {
 		blankLines();
 		switch(level) {
 		case 0:

@@ -10,8 +10,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@SuppressWarnings("resource") //YES I KNOW THIS IS TERRIBlE CODING PRACTICE BUT WHATEVER
-
 /*
  * Main Class for Hangman project
  */
@@ -22,12 +20,14 @@ public class Hangman {
 	private String word; //The word the user needs to guess
 	private int diff;
 	private Leaderboard leaderboard;
+	private Scanner scan = new Scanner(System.in);
+	
 	/*
 	 * Constuctor for Hangman class
 	 * 
 	 * It creates HangingMan 'hm'.
 	 */
-	public Hangman() throws Exception {
+	public Hangman()  {
 		hm = new HangingMan();
 		leaderboard = new Leaderboard();
 	}
@@ -37,7 +37,7 @@ public class Hangman {
 	 * 
 	 * Throws an 'Exception' so I don't need a thousand try/catches
 	 */
-	public void start() throws Exception {
+	public void start()  {
 		if(!readFile(file.getName())) { //Call the method 'readFile()', which return whether or not the default wordlist exists
 			System.out.println("File \"" + file.getAbsolutePath() + "\" does not exist, or an error has occured.");
 			System.exit(1); //Exit the program with an error
@@ -51,12 +51,17 @@ public class Hangman {
 			case 1: //They chose the play the game
 				gameItem = playGameMenu(); //Display the Game menu where the user selects a difficulty
 				break;
-			case 2:
-				//Leader board //This will be added later on
+			case 2: //They want to view the leaderboard
+				gameItem = 0;
+				viewLeaderboard();
 				break;
 			case 3: //The user selected 'quit'
 				System.out.println("Thanks for playing");
-				Thread.sleep(2000);
+				try {
+					Thread.sleep(2000);
+				}catch(InterruptedException ex) {
+					ex.printStackTrace();
+				}
 				System.exit(0);
 				break;
 			default: //The user did not select a valid option from the menu
@@ -69,13 +74,19 @@ public class Hangman {
 	}
 
 	/*
+	 * Displays the leaderboard
+	 */
+	private void viewLeaderboard() {
+		leaderboard.display();
+	}
+	
+	/*
 	 * Displays options for game difficulties
 	 * 
 	 * No parameters are taken.
 	 * Returns the option the user selected.
 	 */
 	private int playGameMenu() {
-		Scanner scan = new Scanner(System.in); //Create a Scanner object (this should be dealt with globally but ayy whatevs
 		System.out.println("Please enter a difficulty:");
 		System.out.println("1. Easy");
 		System.out.println("2. Medium");
@@ -92,7 +103,6 @@ public class Hangman {
 	 * Returns the option the user selected.
 	 */
 	private int menu() {
-		Scanner scan = new Scanner(System.in);
 		System.out.println("Please enter an option:");
 		System.out.println("1. Play game");
 		System.out.println("2. View leaderboards");
@@ -104,7 +114,6 @@ public class Hangman {
 	 * Loads a custom wordlist
 	 */
 	public void customList() {
-		Scanner scan = new Scanner(System.in);
 		System.out.print("Enter the name of your file: ");
 		String input = scan.nextLine();
 		readFile(input);
@@ -116,9 +125,7 @@ public class Hangman {
 	 * Parameter 'difficulty' is the game difficulty the user selected.
 	 * Does not return anything.
 	 */
-	private void game(int difficulty) throws Exception {
-		Scanner scan = new Scanner(System.in);
-		
+	private void game(int difficulty)  {
 		int max = 0, min = 0; //'max' and 'min' are max and min word length allowed
 		switch(difficulty) { // They are set in this based on 'difficulty'
 		case 1: //Easy
@@ -177,8 +184,18 @@ public class Hangman {
 			for(int i = 0; i < guessed.size(); i++) { //Display all the users guesses
 				System.out.print(guessed.get(i) + " ");
 			}
-			System.out.print("\nGuess a letter: ");
-			String guess = scan.nextLine().substring(0,1); //Take input from Scanner as the users guess
+			String guess = "";
+			while(guess.length() < 1) {
+				System.out.print("\nGuess a letter: ");
+				guess = scan.next();
+				guess = guess.substring(0,1).toLowerCase(); //Take input from Scanner as the users guess
+				if(guess.length() < 1) {
+					System.out.println("You must enter a guess!");
+				}else if(!guess.matches("[a-z]")) {
+					System.out.println("You must enter a letter!");
+					guess = "";
+				}
+			}
 			if(!guessed.contains(guess)) { //First, check if 'guessed' does NOT contain the guess
 				guessed.add(guess); //Add the guess to 'guesses'
 				if(word.contains(guess)) { //Next, check if 'word' contains the guessed letter
@@ -199,8 +216,14 @@ public class Hangman {
 		}
 		if(win) {
 			System.out.println("\nGood job, you won!");
-			System.out.print("Enter your name: ");
-			String name = scan.nextLine();
+			String name = "";
+			while(name.length() < 1) {
+				System.out.print("Enter your name: ");
+				name = scan.next();
+				if(name.length() > 15) {
+					name = name.substring(0,16);
+				}
+			}
 			leaderboard.add(name, diff);
 		} else {
 			hm.displayHangingMan();
@@ -251,7 +274,7 @@ public class Hangman {
 		}
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args)  {
 		new Hangman().start(); //Start the game
 	}
 }
