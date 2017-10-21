@@ -43,6 +43,8 @@ public class Hangman {
 			System.exit(1); //Exit the program with an error
 		}
 
+		System.out.println(hm.showTitle());
+		
 		int gameItem = 0; //Indicates which difficulty the user will want
 		while(true) { //Loop through the menus
 			hm.level = 0;
