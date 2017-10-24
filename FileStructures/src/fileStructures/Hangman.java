@@ -1,3 +1,9 @@
+/*
+ * Hangman Game
+ * 
+ * By Joshua Moore
+ */
+
 package fileStructures;
 
 import java.io.BufferedReader;
@@ -18,18 +24,18 @@ public class Hangman {
 	private ArrayList<String> words = new ArrayList<>(); //Arraylist that holds all the words from wordlist
 	private HangingMan hm; //Object of HangingMan class, which prints the graphic to the console
 	private String word; //The word the user needs to guess
-	private int diff;
-	private Leaderboard leaderboard;
-	private Scanner scan = new Scanner(System.in);
+	private int diff; //Difficulty the user selected (determined below)
+	private Leaderboard leaderboard; //Object for handling leaderboard
+	private Scanner scan = new Scanner(System.in); //Scanner for taking user input
 	
 	/*
 	 * Constuctor for Hangman class
 	 * 
 	 * It creates HangingMan 'hm'.
 	 */
-	public Hangman()  {
-		hm = new HangingMan();
-		leaderboard = new Leaderboard();
+	public Hangman() {
+		hm = new HangingMan(); //Class that displays the Hangman character
+		leaderboard = new Leaderboard(); //Deals with the leaderboard
 	}
 	
 	/*
@@ -54,17 +60,17 @@ public class Hangman {
 				gameItem = playGameMenu(); //Display the Game menu where the user selects a difficulty
 				break;
 			case 2: //They want to view the leaderboard
-				gameItem = 0;
-				viewLeaderboard();
+				gameItem = 0; //Make sure the gameItem is zero, just in case this is the second time they are viewing the menu
+				viewLeaderboard(); //View the leaderboard. This really doesn't need commenting
 				break;
 			case 3: //The user selected 'quit'
 				System.out.println("Thanks for playing");
 				try {
-					Thread.sleep(2000);
-				}catch(InterruptedException ex) {
+					Thread.sleep(2000); //Wait for 2 seconds before leaving the game
+				} catch(InterruptedException ex) { //It will NEVER throw the exception (as stated by Java docs), but the compiler requires it
 					ex.printStackTrace();
 				}
-				System.exit(0);
+				System.exit(0); //Exit with status code 0 (success)
 				break;
 			default: //The user did not select a valid option from the menu
 				System.out.println("That is an invalid option!");
@@ -114,6 +120,9 @@ public class Hangman {
 
 	/*
 	 * Loads a custom wordlist
+	 * 
+	 * Takes no parameters
+	 * Does not return anything
 	 */
 	public void customList() {
 		System.out.print("Enter the name of your file: ");
@@ -127,7 +136,7 @@ public class Hangman {
 	 * Parameter 'difficulty' is the game difficulty the user selected.
 	 * Does not return anything.
 	 */
-	private void game(int difficulty)  {
+	private void game(int difficulty) {
 		int max = 0, min = 0; //'max' and 'min' are max and min word length allowed
 		switch(difficulty) { // They are set in this based on 'difficulty'
 		case 1: //Easy
@@ -163,7 +172,7 @@ public class Hangman {
 			break;
 		}
 		
-		word = pickWord(min, max).toLowerCase(); //Select a word in between the minimum and maximum values
+		word = pickWord(min, max).toLowerCase(); //Select a word in between the minimum and maximum values, and convert it to lowercase
 		
 		ArrayList<String> guessed = new ArrayList<>(); //Holds all the letters the user has guessed
 		String[] fillin = new String[word.length()]; //Represents user progress (hidden letters are '-')
@@ -171,14 +180,14 @@ public class Hangman {
 			fillin[i] = "-"; //...
 		}
 		
-		//Start of gameplay loop
 		boolean win = false; //Sets whether the user has won or not
+		//Start of gameplay loop
 		while(hm.level < 10) { //Repeate gameplay until user is out of guesses
 			hm.displayHangingMan(); //Call Hangingman class to print the art to console
 			for(int i = 0; i < fillin.length; i++) { //Print the contents of 'fillin'
 				System.out.print(fillin[i]);
 			}
-			if(!Arrays.asList(fillin).contains("-")){ //If 'fillin' has no hyphens, that means the user has won
+			if(!Arrays.asList(fillin).contains("-")) { //If 'fillin' has no hyphens, that means the user has won
 				win = true;
 				break; //Exit from the while loop
 			}
@@ -186,14 +195,14 @@ public class Hangman {
 			for(int i = 0; i < guessed.size(); i++) { //Display all the users guesses
 				System.out.print(guessed.get(i) + " ");
 			}
-			String guess = "";
-			while(guess.length() < 1) {
+			String guess = ""; //Initialize the guess, just in case they enter nothing
+			while(guess.length() < 1) { //Ask for a guess until the user enters a valid guess
 				System.out.print("\nGuess a letter: ");
 				guess = scan.next();
 				guess = guess.substring(0,1).toLowerCase(); //Take input from Scanner as the users guess
-				if(guess.length() < 1) {
+				if(guess.length() < 1) { //If they entered nothing
 					System.out.println("You must enter a guess!");
-				}else if(!guess.matches("[a-z]")) {
+				} else if(!guess.matches("[a-z]")) { //If they entered a number or special character
 					System.out.println("You must enter a letter!");
 					guess = "";
 				}
