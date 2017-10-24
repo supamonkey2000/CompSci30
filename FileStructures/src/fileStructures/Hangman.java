@@ -225,14 +225,14 @@ public class Hangman {
 				}
 			}
 		}
-		if(win) {
+		if(win) { //Clearly, the user has won
 			System.out.println("\nGood job, you won!");
 			String name = "";
-			while(name.length() < 1) {
+			while(name.length() < 1) { //Allow the user to enter their name, and repeat if they entered nothing
 				System.out.print("Enter your name: ");
 				name = scan.next();
-				if(name.length() > 15) {
-					name = name.substring(0,16);
+				if(name.length() > 15) { //We want to keep the name length short so they can't have a massive name...
+					name = name.substring(0, 16); //...so we just shorten it
 				}
 			}
 			leaderboard.add(name, diff);
@@ -243,13 +243,13 @@ public class Hangman {
 	}
 
 	/*
-	 * Picks a random word from the wordlist (potentially Recursive)
+	 * Picks a random word from the wordlist recursively
 	 * 
 	 * Parameters 'min' and 'max': the returned String must have a length inside these.
 	 * Returns a String representing the word.
 	 */
 	private String pickWord(int min, int max) {
-		int index = ThreadLocalRandom.current().nextInt(0, words.size()); //Pick a random number
+		int index = ThreadLocalRandom.current().nextInt(0, words.size()); //Select a random number using the hardward RNG
 		String theWord = words.get(index); //Get the word linked to that random number (the index)
 		if(theWord.length() > min && theWord.length() < max) return theWord; //Return the word if the rules apply to it
 		else return pickWord(min, max); //Or just run it recursively until they do
@@ -267,25 +267,30 @@ public class Hangman {
 			System.out.println("File does not exist!");
 			return false; //No.
 		}
-		try(BufferedReader buff = new BufferedReader(new FileReader(file))) { //Ooh, fancy, a "try with resources"
+		try(BufferedReader buff = new BufferedReader(new FileReader(file))) { //Create new Readers to read the file
 			String line;
-			while((line = buff.readLine())!=null) {
-				Pattern pt = Pattern.compile("[^a-zA-Z0-9]");
+			while((line = buff.readLine()) != null) { //Read each line of the file until there is no line left to be read
+				Pattern pt = Pattern.compile("[^a-zA-Z0-9]"); //Regex pattern to check for letters and numbers
 				Matcher match = pt.matcher(line);
-				while(match.find()) {
+				while(match.find()) { //Find all occurences of the pattern
 					String s = match.group();
-					line = line.replaceAll("\\"+s,"");
+					line = line.replaceAll("\\" + s, "");
 				}
 				words.add(line);
 			}
 			return true;
-		}catch(Exception ex) {
+		} catch(Exception ex) {
 			ex.printStackTrace();
 			return false;
 		}
 	}
 
-	public static void main(String[] args)  {
+	/*
+	 * Main method for the program
+	 * 
+	 * This literally does absolutely nothing, in this simple of a program I don't need to use static variables
+	 */
+	public static void main(String[] args) {
 		new Hangman().start(); //Start the game
 	}
 }
