@@ -12,19 +12,26 @@ import java.util.regex.Pattern;
 
 public class WLstuff {
 	
-	File file = new File("WLstuffWordlist.txt");
-	ArrayList<String> lines = new ArrayList<>();
+	File file = new File("WLstuffWordlist.txt"); //File object that contains the name of the wordlist
+	ArrayList<String> lines = new ArrayList<>(); //Holds all the lines in the wordlist
 	
+	
+	/*
+	 * The main section of the program
+	 * 
+	 * Takes no parameters
+	 * Returns nothing
+	 */
 	public void start() {
-		checkFile();
-		readFile();
+		checkFile(); //Call 'checkFile'
+		readFile(); //Call 'readFile'
 		Scanner scan = new Scanner(System.in);
-		while(true) {
+		while(true) { //Loop through the menu
 			System.out.println("1. Pick random word");
 			System.out.println("2. Add new word");
 			System.out.println("3. Remove a word");
 			System.out.println("4. Quit");
-			int option = Integer.parseInt(scan.nextLine());
+			int option = Integer.parseInt(scan.nextLine()); //Take user input to select on option
 			switch(option) {
 			case 1:
 				System.out.println(pickWord());
