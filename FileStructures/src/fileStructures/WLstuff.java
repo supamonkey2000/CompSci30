@@ -52,75 +52,123 @@ public class WLstuff {
 		}
 	}
 	
+	/*
+	 * Remove a word from the list
+	 * 
+	 * Takes no parameters
+	 * Returns nothing
+	 */
 	private void removeWord() {
+		@SuppressWarnings("resource")
 		Scanner scan = new Scanner(System.in);
 		System.out.println("Type your word: ");
 		String remove = scan.nextLine();
-		for(int i = 0; i < lines.size(); i++) {
-			if(lines.get(i).matches(Pattern.quote(remove + ":")+"[0-9]")) {
+		for(int i = 0; i < lines.size(); i++) { //Loop through each word in the list
+			if(lines.get(i).matches(Pattern.quote(remove + ":")+"[0-9]")) { //Check if line matches the word, a colon, and ANY letter
 				System.out.println("Removed " + remove);
-				lines.remove(i);
+				lines.remove(i); //........ remove it....
 			}
 		}
-		save();
+		save(); //And save the file
 	}
 	
+	/*
+	 * Add a word to the list
+	 * 
+	 * Takes no parameters
+	 * Returns nothing
+	 */
 	private void addWord() {
+		@SuppressWarnings("resource")
 		Scanner scan = new Scanner(System.in);
 		System.out.print("Type your word: ");
 		String add = scan.nextLine();
-		lines.add(add+":0");
-		save();
+		lines.add(add+":0"); //Add the word, plus a guess count of zero
+		save(); //Save the file
 	}
 	
+	/*
+	 * Saves the current wordlist to a file
+	 * 
+	 * Takes no parameters
+	 * Returns nothing
+	 * Possibly throws an exception
+	 */
 	private void save() {
-		try(BufferedWriter buff = new BufferedWriter(new FileWriter(file))) {
-			for(String line : lines) {
-				buff.write(line+"\n");
+		try(BufferedWriter buff = new BufferedWriter(new FileWriter(file))) { //Create new writers
+			for(String line : lines) { //Go through every line in the list...
+				buff.write(line+"\n"); //... and write them to the buffer
 			}
-			buff.flush();
+			buff.flush(); //Save the buffer into a file
 			System.out.println("Saved");
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 	
+	/*
+	 * Save file with an updated guess count
+	 * 
+	 * Takes no parameters
+	 * Returns nothing
+	 * Possibly throws an exception
+	 */
 	private void save(String update) {
-		String[] split = update.split(":");
+		String[] split = update.split(":"); //Split the input into an array for {word,score}
 		System.out.println(update);
-		int index = lines.indexOf(split[0]+":"+Integer.toString(Integer.parseInt(split[1])));
-		lines.remove(index);
-		lines.add(split[0]+":"+Integer.toString(Integer.parseInt(split[1])+1));
-		try(BufferedWriter buff = new BufferedWriter(new FileWriter(file))) {
-			for(String line : lines) {
-				buff.write(line+"\n");
+		int index = lines.indexOf(split[0]+":"+Integer.toString(Integer.parseInt(split[1]))); //Get the index of the line
+		lines.remove(index); //Remove it
+		lines.add(split[0]+":"+Integer.toString(Integer.parseInt(split[1])+1)); //Add the updated version to the wordlist
+		try(BufferedWriter buff = new BufferedWriter(new FileWriter(file))) { //Create new writers
+			for(String line : lines) { //Go through each line in the list
+				buff.write(line+"\n"); //Write them to the buffer
 			}
 			buff.flush();
-		} catch(Exception ex) {
-			ex.printStackTrace();
+		} catch(Exception ex) { //Catch the exception
+			ex.printStackTrace(); //Print the stack trace of the exception
 		}
-		readFile();
+		readFile(); //Read the file again to update the list
 	}
 	
+	/*
+	 * Picks a random word from the list
+	 * 
+	 * Takes no parameters
+	 * Returns a string (the word)
+	 */
 	private String pickWord() {
-		String line = lines.get(ThreadLocalRandom.current().nextInt(0, lines.size()));
-		String[] split = line.split(":");
-		save(line);
-		return split[0] + " has been guessed " + Integer.toString(Integer.parseInt(split[1]) + 1) + " times.";
+		String line = lines.get(ThreadLocalRandom.current().nextInt(0, lines.size())); //Get a String from a random index in the list
+		String[] split = line.split(":"); //Split it so we can actually print it
+		save(line); //Save the updated line
+		return split[0] + " has been guessed " + Integer.toString(Integer.parseInt(split[1]) + 1) + " times."; //Return the word to the screen
 	}
 	
+	/*
+	 * Reads the file into a list
+	 * 
+	 * Takes no parameters
+	 * Returns nothing
+	 * Possibly throws an exception
+	 */
 	private void readFile() {
-		lines.clear();
-		try(BufferedReader buff = new BufferedReader(new FileReader(file))){
+		lines.clear(); //Clear the list
+		try(BufferedReader buff = new BufferedReader(new FileReader(file))) { //Create new writers
 			String line;
-			while((line = buff.readLine()) != null) {
-				lines.add(line);
+			while((line = buff.readLine()) != null) { //Read each line into the list until no lines remain
+				lines.add(line); //Add the line to the 
 			}
-		} catch(Exception ex) {
-			System.out.println("hoover dam");
+		} catch(Exception ex) { //Catch the exception
+			ex.printStackTrace(); //Print the stack trace of the exception
 		}
 	}
 	
+	/*
+	 * Check if the file is created or create it
+	 * 
+	 * Takes no parameters
+	 * Returns nothing
+	 * Possibly throws an exception
+	 */
 	private void checkFile() {
 		try {
 			if(!file.exists()) {
@@ -131,6 +179,9 @@ public class WLstuff {
 		}
 	}
 	
+	/*
+	 * Starts the program
+	 */
 	public static void main(String[] args) {
 		new WLstuff().start();
 	}	
