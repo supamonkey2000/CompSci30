@@ -1,0 +1,18 @@
+1. It is much faster than the others
+2. Average: О(n log (n))
+   Worst: О(n2)
+   Best: О(n log (n))
+3. Divide and conquer
+4. f = 0, g = 31
+5. 2
+6. It gets the closest middle value in the array, and it splits the array at that part
+7. The center point of an linear set of values is the max + the min, divided by 2. The same applies here
+8. sort(a, left, j);
+   sort(a, k, right);
+9. 5 and 7?
+
+Contest Problems:
+1. B
+2. B
+3. C
+4. E

@@ -258,7 +258,7 @@ public class Hangman {
 	 * Read the wordlist file into 'words'
 	 * 
 	 * Parameter 'theFile' is the file
-	 * Returns a boolean based on whether the file exists or not, or if an exception occured.
+	 * Returns a boolean based on whether the file exists or not, or if an exception occurred.
 	 */
 	private boolean readFile(String theFile) {
 		file = new File(theFile);
@@ -271,7 +271,7 @@ public class Hangman {
 			while((line = buff.readLine()) != null) { //Read each line of the file until there is no line left to be read
 				Pattern pt = Pattern.compile("[^a-zA-Z0-9]"); //Regex pattern to check for letters and numbers
 				Matcher match = pt.matcher(line);
-				while(match.find()) { //Find all occurences of the pattern
+				while(match.find()) { //Find all occurrences of the pattern
 					String s = match.group();
 					line = line.replaceAll("" + s, "");
 				}
