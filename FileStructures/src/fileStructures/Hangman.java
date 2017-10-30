@@ -23,7 +23,6 @@ public class Hangman {
 	private File file = new File("words.txt"); //The wordlist file variable
 	private ArrayList<String> words = new ArrayList<>(); //Arraylist that holds all the words from wordlist
 	private HangingMan hm; //Object of HangingMan class, which prints the graphic to the console
-	private String word; //The word the user needs to guess
 	private int diff; //Difficulty the user selected (determined below)
 	private Leaderboard leaderboard; //Object for handling leaderboard
 	private Scanner scan = new Scanner(System.in); //Scanner for taking user input
@@ -43,7 +42,7 @@ public class Hangman {
 	 * 
 	 * Throws an 'Exception' so I don't need a thousand try/catches
 	 */
-	public void start()  {
+	private void start()  {
 		if(!readFile(file.getName())) { //Call the method 'readFile()', which return whether or not the default wordlist exists
 			System.out.println("File \"" + file.getAbsolutePath() + "\" does not exist, or an error has occured.");
 			System.exit(1); //Exit the program with an error
@@ -124,7 +123,7 @@ public class Hangman {
 	 * Takes no parameters
 	 * Does not return anything
 	 */
-	public void customList() {
+	private void customList() {
 		System.out.print("Enter the name of your file: ");
 		String input = scan.nextLine();
 		readFile(input);
@@ -137,7 +136,7 @@ public class Hangman {
 	 * Does not return anything.
 	 */
 	private void game(int difficulty) {
-		int max = 0, min = 0; //'max' and 'min' are max and min word length allowed
+		int max, min; //'max' and 'min' are max and min word length allowed
 		switch(difficulty) { // They are set in this based on 'difficulty'
 		case 1: //Easy
 			max = 5;
@@ -171,8 +170,8 @@ public class Hangman {
 			min = Integer.MIN_VALUE;
 			break;
 		}
-		
-		word = pickWord(min, max).toLowerCase(); //Select a word in between the minimum and maximum values, and convert it to lowercase
+
+		String word = pickWord(min, max).toLowerCase();
 		
 		ArrayList<String> guessed = new ArrayList<>(); //Holds all the letters the user has guessed
 		String[] fillin = new String[word.length()]; //Represents user progress (hidden letters are '-')
@@ -184,16 +183,16 @@ public class Hangman {
 		//Start of gameplay loop
 		while(hm.level < 10) { //Repeate gameplay until user is out of guesses
 			hm.displayHangingMan(); //Call Hangingman class to print the art to console
-			for(int i = 0; i < fillin.length; i++) { //Print the contents of 'fillin'
-				System.out.print(fillin[i]);
+			for (String aFillin : fillin) { //Print the contents of 'fillin'
+				System.out.print(aFillin);
 			}
 			if(!Arrays.asList(fillin).contains("-")) { //If 'fillin' has no hyphens, that means the user has won
 				win = true;
 				break; //Exit from the while loop
 			}
 			System.out.print("\nGuessed letters: ");
-			for(int i = 0; i < guessed.size(); i++) { //Display all the users guesses
-				System.out.print(guessed.get(i) + " ");
+			for(String aGuessed : guessed) { //Display all the users guesses
+				System.out.print(aGuessed + " ");
 			}
 			String guess = ""; //Initialize the guess, just in case they enter nothing
 			while(guess.length() < 1) { //Ask for a guess until the user enters a valid guess
@@ -216,8 +215,8 @@ public class Hangman {
 						indexes.add(Integer.toString(index));
 						index = word.indexOf(guess, index + 1);
 					}
-					for(int i = 0; i < indexes.size(); i++) { //Iterate through each index...
-						int curIndex = Integer.parseInt(indexes.get(i));
+					for(String indexe : indexes) { //Iterate through each index...
+						int curIndex = Integer.parseInt(indexe);
 						fillin[curIndex] = guess; //...and replace 'fillin' with the guess
 					}
 				} else {
@@ -274,7 +273,7 @@ public class Hangman {
 				Matcher match = pt.matcher(line);
 				while(match.find()) { //Find all occurences of the pattern
 					String s = match.group();
-					line = line.replaceAll("\\" + s, "");
+					line = line.replaceAll("" + s, "");
 				}
 				words.add(line);
 			}
