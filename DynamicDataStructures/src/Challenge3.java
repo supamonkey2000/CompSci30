@@ -1,3 +1,4 @@
+import java.io.ObjectInputStream;
 import java.util.concurrent.ThreadLocalRandom;
 
 class Challenge3 {
@@ -20,7 +21,8 @@ class Challenge3 {
         LinkedList[] playerDecks = deal(selectionShuffle(baseDeck));
 
         System.out.println("\nLets play a game of war");
-        while(playerDecks[0].length() != 0 && playerDecks[1].length() != 0) {
+
+        war_loop:while(true) {
             System.out.println("");
 
             Object[] cardP1 = (Object[]) playerDecks[0].get(0);
@@ -30,9 +32,50 @@ class Challenge3 {
 
             System.out.println("Player 1 played " + cardP1[0] + " and Player 2 played " + cardP2[0] + ".");
             if(cardP1[1] == cardP2[1]) {
+                boolean war = true;
+                LinkedList warCards = new LinkedList();
+                warCards.add(cardP1);
+                warCards.add(cardP2);
                 //WAR
+                while(war) {
+                    if(playerDecks[0].length() < 5) {
+                        System.out.println("Player 2 wins the game because Player 1 has no cards for War!");
+                        break war_loop;
+                    } else if(playerDecks[1].length() < 5) {
+                        System.out.println("Player 1 wins the game because Player 2 has no cards for War!");
+                        break war_loop;
+                    }
+                    for(int i = 0; i < 3; i++) {
+                        Object[] card = (Object[]) playerDecks[0].get(0);
+                        warCards.add(card);
+                        playerDecks[0].remove(0);
+                    }
+                    for(int i = 0; i < 3; i++) {
+                        Object[] card = (Object[]) playerDecks[1].get(0);
+                        warCards.add(card);
+                        playerDecks[1].remove(0);
+                    }
+                    Object[] card1 = (Object[]) playerDecks[0].get(0);
+                    Object[] card2 = (Object[]) playerDecks[1].get(0);
+                    warCards.add(card1);
+                    warCards.add(card2);
+                    playerDecks[0].remove(0);
+                    playerDecks[1].remove(0);
 
-
+                    if((int)card1[1] > (int)card2[1]) {
+                        System.out.println("Player 1 wins the war!");
+                        for(int i = 0; i < warCards.length(); i++) {
+                            playerDecks[0].add(warCards.get(i));
+                        }
+                        break;
+                    } else if((int)card1[1] < (int)card2[1]) {
+                        System.out.println("Player 2 wins the war!");
+                        for(int i = 0; i < warCards.length(); i++) {
+                            playerDecks[1].add(warCards.get(i));
+                        }
+                        break;
+                    }
+                }
                 //END OF WAR
             } else if((int)cardP1[1] > (int)cardP2[1]) {
                 System.out.println("Player 1 wins the round.");
@@ -54,7 +97,7 @@ class Challenge3 {
                 break;
             }
 
-            try{Thread.sleep(10);}catch(Exception ex){}
+            try{Thread.sleep(5);}catch(Exception ex){}
         }
     }
 
